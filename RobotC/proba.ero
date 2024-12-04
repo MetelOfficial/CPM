@@ -1,0 +1,51 @@
+
+#include "functions_codes.h"
+int Sold1, Sold2;
+float Kp=1;
+float Kd=0;
+int Mo=50;
+int Ei=0;
+int flag=0;
+int Ku=0;
+int A=10;
+void go(int L, int R){
+    if(L>100) L=100; else if(L<-100) L=-100;
+    if(R>100) R=100; else if(R<-100) R=-100;
+    L=0.1*L; R=0.1*R;
+    
+    if(L>0)
+        dc_motor(LEFT_MOTOR_1,FORWARD_DIRECTION,L);
+    else
+        dc_motor(LEFT_MOTOR_1,BACKWARD_DIRECTION,L);
+    
+    if(R>0)
+        dc_motor(RIGHT_MOTOR_1,FORWARD_DIRECTION,R);
+    else
+        dc_motor(RIGHT_MOTOR_1,BACKWARD_DIRECTION,R);
+}
+int dat1(){
+    float V1=analogRead(4)*5/1024;
+    int S1=30*pow(V1,-1.123);
+    Sold1=Sold1*0.9+S1*0.1;
+    return Sold1;
+}
+int dat2(){
+    float V2=analogRead(5)*5/1024;
+    int S2=30*pow(V2,-1.123);
+    Sold2=Sold2*0.9+S2*0.1;
+    return Sold2;
+}
+
+
+int main ()
+{
+    mcu_initialization();
+    while(1)
+    {
+        int M1=10-dat1(); 
+        int M2=10-dat2(); 
+        go(M1,M2);
+     
+    }
+    return 0;
+}
